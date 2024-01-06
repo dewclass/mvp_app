@@ -6,14 +6,14 @@
     <button onclick="onUploadClick()">Upload</button>
 </section>
 
+<h1 id="loading">Loading....</h1>
 
 <section id="result">
 
     <h4>Image has following objects</h4>
 
-    <ul>
-        <li>Elephant</li>
-        <li>Dog</li>
+    <ul id="outputlist">
+       
     </ul>
 
     <button onclick="toggleResult()"> Back Button </button>
@@ -24,13 +24,37 @@
 <script>
 
     let canShowResult = false;
+    let canShowLoading = false;
 
     function onUploadClick() {
         console.log("Test Upload");
         const selectedFile = document.getElementById("photo").files[0];
         console.log("Uploaded File", selectedFile);
-        canShowResult = true;
-        toggleResult()
+
+        loading(true)
+        uploadFile(selectedFile).then(function (response) {
+
+            response.json().then(function (json) {
+
+                listView = ""
+                
+                if(json && json.objects){
+                    json.objects.forEach(function(obj){
+                        listView +="<li>"+obj[0]+"-"+obj[1]+"</li>"
+                    })
+                }
+                document.getElementById("outputlist").innerHTML = listView
+                loading(false)
+                canShowResult = true;
+                toggleResult()
+            })
+
+
+
+        });
+
+
+
     }
 
     function toggleResult() {
@@ -44,10 +68,37 @@
         canShowResult = !canShowResult
     }
 
+
+    function loading(status) {
+        const resultSection = document.getElementById("loading");
+        resultSection.style.display = status ? "block" : "none"
+    }
+
     window.addEventListener('load', function () {
         console.log("onLoad ")
+        loading(false)
         toggleResult()
+
+        connectWithBackEndApi()
     });
+
+    function uploadFile(uploadFile) {
+        const formData = new FormData();
+        formData.append("file", uploadFile, uploadFile.name)
+
+        return fetch("http://127.0.0.1:8000/uploadfile/", {
+            method: "POST",
+            body: formData
+        })
+    }
+
+    function connectWithBackEndApi() {
+        const response = fetch("http://127.0.0.1:8000").then(function (response) {
+            response.json().then(function (json) {
+                console.log(json);
+            })
+        });
+    }
 
 </script>
 
