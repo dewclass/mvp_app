@@ -1,21 +1,53 @@
 <html>
 <h1>Hello World</h1>
 
-<input type="file" id="photo" />
-<button onclick="onUploadClick()">Upload</button>
+<section id="inputSection">
+    <input type="file" id="photo" />
+    <button onclick="onUploadClick()">Upload</button>
+</section>
 
 
+<section id="result">
+
+    <h4>Image has following objects</h4>
+
+    <ul>
+        <li>Elephant</li>
+        <li>Dog</li>
+    </ul>
+
+    <button onclick="toggleResult()"> Back Button </button>
+
+</section>
 
 
 <script>
 
+    let canShowResult = false;
+
     function onUploadClick() {
         console.log("Test Upload");
-
         const selectedFile = document.getElementById("photo").files[0];
         console.log("Uploaded File", selectedFile);
-
+        canShowResult = true;
+        toggleResult()
     }
+
+    function toggleResult() {
+        const resultSection = document.getElementById("result");
+        resultSection.style.display = canShowResult ? "block" : "none"
+
+
+        const inputSection = document.getElementById("inputSection");
+        inputSection.style.display = canShowResult ? "none" : "block"
+
+        canShowResult = !canShowResult
+    }
+
+    window.addEventListener('load', function () {
+        console.log("onLoad ")
+        toggleResult()
+    });
 
 </script>
 
