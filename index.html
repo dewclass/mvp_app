@@ -1,0 +1,22 @@
+<html>
+<h1>Hello World</h1>
+
+<input type="file" id="photo" />
+<button onclick="onUploadClick()">Upload</button>
+
+
+
+
+<script>
+
+    function onUploadClick() {
+        console.log("Test Upload");
+
+        const selectedFile = document.getElementById("photo").files[0];
+        console.log("Uploaded File", selectedFile);
+
+    }
+
+</script>
+
+</html>
