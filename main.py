@@ -1,6 +1,8 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile,Request
+from fastapi.responses import HTMLResponse
 from ml_obj_detection import detect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.templating import Jinja2Templates
 app = FastAPI()
 
 
@@ -12,7 +14,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
+templates = Jinja2Templates(directory="templates")
+
+@app.get("/", response_class=HTMLResponse)
+def read_root(request: Request):
+    return templates.TemplateResponse(
+        request=request, name="index.html")
+
+
+@app.get("/backend")
 def read_root():
     return {"Hello": "World"}
 
@@ -22,3 +32,6 @@ async def create_upload_file(file: UploadFile=File(...)):
     return {
         "objects":out_reponse
     }
+
+if __name__ == "__main__":
+    uvic
